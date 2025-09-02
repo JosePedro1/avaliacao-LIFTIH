@@ -9,6 +9,12 @@ function verificarAdmin() {
         alert("Senha incorreta. Tente novamente.");
     }
 }
+// === Mostrar caixa de login do Admin ===
+function abrirLoginAdmin() {
+  const box = document.getElementById("admin-login-box");
+  box.style.display = (box.style.display === "none") ? "block" : "none";
+}
+
 // === Avaliador ===
 function enviarAvaliacao() {
   const nomeAvaliador = document.getElementById("nomeAvaliador").value.trim();
