@@ -1,10 +1,11 @@
+// database.js
 const { Sequelize, DataTypes } = require("sequelize");
 const bcrypt = require("bcrypt");
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
   protocol: "postgres",
-  logging: false,
+  logging: (msg) => console.log("[Sequelize]", msg), // <— ATIVEI LOG
   dialectOptions: {
     ssl: { require: true, rejectUnauthorized: false },
   },
@@ -12,38 +13,27 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 
 // MODELS
 const User = sequelize.define("User", {
-  id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
+  id:       { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
   username: { type: DataTypes.STRING, allowNull: false, unique: true },
   password: { type: DataTypes.STRING, allowNull: false },
 });
 
 const Avaliado = sequelize.define("Avaliado", {
-  id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
+  id:   { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
   nome: { type: DataTypes.STRING, allowNull: false, unique: true },
 });
 
 const NotasAvaliadores = sequelize.define("NotasAvaliadores", {
-  id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
+  id:        { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
   avaliador: { type: DataTypes.STRING, allowNull: false },
-  avaliado: { type: DataTypes.STRING, allowNull: false },
-  nota: { type: DataTypes.FLOAT, allowNull: false },
+  avaliado:  { type: DataTypes.STRING, allowNull: false },
+  nota:      { type: DataTypes.FLOAT,  allowNull: false },
 });
 
-const MediaEntrevista = sequelize.define("MediaEntrevista", {
-  nota: { type: DataTypes.FLOAT, defaultValue: 0 },
-});
-
-const CartaIntencao = sequelize.define("CartaIntencao", {
-  nota: { type: DataTypes.FLOAT, defaultValue: 0 },
-});
-
-const MediaHistorico = sequelize.define("MediaHistorico", {
-  nota: { type: DataTypes.FLOAT, defaultValue: 0 },
-});
-
-const MediaFinal = sequelize.define("MediaFinal", {
-  nota: { type: DataTypes.FLOAT, defaultValue: 0 },
-});
+const MediaEntrevista = sequelize.define("MediaEntrevista", { nota: { type: DataTypes.FLOAT, defaultValue: 0 } });
+const CartaIntencao   = sequelize.define("CartaIntencao",   { nota: { type: DataTypes.FLOAT, defaultValue: 0 } });
+const MediaHistorico  = sequelize.define("MediaHistorico",  { nota: { type: DataTypes.FLOAT, defaultValue: 0 } });
+const MediaFinal      = sequelize.define("MediaFinal",      { nota: { type: DataTypes.FLOAT, defaultValue: 0 } });
 
 // RELACIONAMENTOS
 Avaliado.hasOne(MediaEntrevista, { onDelete: 'CASCADE' });
@@ -67,7 +57,7 @@ async function syncDatabase() {
     console.log("✅ Tabelas sincronizadas!");
 
     const adminUsername = process.env.ADMIN_USERNAME || "admin";
-    const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+    const adminPassword = process.env.ADMIN_PASSWORD || "admin510"; // <— default alinhado
 
     const adminExists = await User.findOne({ where: { username: adminUsername } });
     if (!adminExists) {
@@ -83,5 +73,6 @@ async function syncDatabase() {
 syncDatabase();
 
 module.exports = {
-  sequelize, User, Avaliado, NotasAvaliadores, MediaEntrevista, CartaIntencao, MediaHistorico, MediaFinal
+  sequelize, User, Avaliado, NotasAvaliadores,
+  MediaEntrevista, CartaIntencao, MediaHistorico, MediaFinal
 };
