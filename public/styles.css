@@ -1,0 +1,125 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 900px;
+  margin: auto;
+}
+
+.admin-container {
+  text-align: left;
+}
+
+.card {
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 5px;
+}
+
+h1, h2, h3 {
+  color: #0056b3;
+}
+p {
+    font-size: 0.9em;
+    color: #666;
+}
+
+input[type="text"], input[type="number"] {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.back-button {
+  background-color: #6c757d;
+}
+
+.back-button:hover {
+  background-color: #5a6268;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #e9ecef;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+li .actions button {
+    margin-left: 5px;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+li .actions .edit-btn {
+    background: #ffc107;
+}
+li .actions .edit-btn:hover {
+    background: #e0a800;
+}
+li .actions .remove-btn {
+    background: #dc3545;
+}
+li .actions .remove-btn:hover {
+    background: #c82333;
+}
+
+/* Estilo para notas editáveis */
+.editable-note {
+    cursor: pointer;
+    background-color: #fffacd; /* Amarelo claro para indicar que é editável */
+    transition: background-color 0.3s;
+}
+.editable-note:hover {
+    background-color: #f0e68c; /* Amarelo mais forte no hover */
+}

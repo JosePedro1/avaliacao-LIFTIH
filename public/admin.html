@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Área Administrativa</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container admin-container">
+    <h1>Área Administrativa</h1>
+
+    <div class="card">
+      <h2>Gerenciar Avaliados</h2>
+      <input type="text" id="novoAvaliado" placeholder="Nome do novo avaliado">
+      <button onclick="adicionarAvaliado()">Adicionar</button>
+      <ul id="lista-avaliados"></ul>
+    </div>
+
+    <div class="card">
+      <h2>Média Final dos Candidatos</h2>
+      <p>A média final é calculada automaticamente.</p>
+      <table><thead><tr><th>Avaliado</th><th>Nota Final</th></tr></thead><tbody id="tabela-media-final"></tbody></table>
+    </div>
+    
+    <div class="card">
+      <h2>Notas Detalhadas</h2>
+      <p>Clique em uma nota para editá-la.</p>
+
+      <h3>Média da Entrevista (calculada)</h3>
+      <table><thead><tr><th>Avaliado</th><th>Nota</th></tr></thead><tbody id="tabela-media-entrevista"></tbody></table>
+
+      <h3>Carta de Intenção</h3>
+      <table><thead><tr><th>Avaliado</th><th>Nota</th></tr></thead><tbody id="tabela-carta-intencao"></tbody></table>
+
+      <h3>Histórico Acadêmico</h3>
+      <table><thead><tr><th>Avaliado</th><th>Nota</th></tr></thead><tbody id="tabela-media-historico"></tbody></table>
+    </div>
+
+    <div class="card">
+      <h2>Notas Individuais dos Avaliadores</h2>
+       <table><thead><tr><th>Avaliador</th><th>Avaliado</th><th>Nota</th></tr></thead><tbody id="tabela-avaliacoes"></tbody></table>
+    </div>
+
+    <button class="back-button" onclick="window.location.href='index.html'">Voltar</button>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
