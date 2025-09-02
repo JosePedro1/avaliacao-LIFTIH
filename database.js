@@ -27,8 +27,8 @@ const NotasAvaliadores = sequelize.define("NotasAvaliadores", {
   id:        { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
   avaliador: { type: DataTypes.STRING, allowNull: false },  // quem avaliou
   nota:      { type: DataTypes.FLOAT, allowNull: false },   // nota dada
+  // ⚡ Relacionamento automático via AvaliadoId
 });
-
 
 const MediaEntrevista = sequelize.define("MediaEntrevista", {
   nota: { type: DataTypes.FLOAT, defaultValue: 0 }
@@ -87,6 +87,7 @@ async function syncDatabase() {
 
 syncDatabase();
 
+// === EXPORTS ===
 module.exports = {
   sequelize,
   User,
