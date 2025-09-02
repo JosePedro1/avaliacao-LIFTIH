@@ -1,99 +1,100 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
-  color: #333;
-  margin: 0;
-  padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #0a0a0a;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
 }
 
-.container {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  text-align: center;
-  max-width: 900px;
-  margin: auto;
-}
-
-.admin-container {
-  text-align: left;
-}
-
-.card {
-  background-color: #fafafa;
-  border: 1px solid #ddd;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  border-radius: 5px;
+.container, .admin-container, .avaliador-container {
+    background-color: #1a1a2e;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    margin: auto;
+    width: 90%;
+    max-width: 900px;
 }
 
 h1, h2, h3 {
-  color: #0056b3;
-}
-p {
-    font-size: 0.9em;
-    color: #666;
+    color: #92a4ff; /* Um azul mais claro para títulos */
 }
 
-input[type="text"], input[type="number"] {
-  width: calc(100% - 22px);
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+p {
+    font-size: 0.9em;
+    color: #ccc;
+}
+
+input, .editable-note {
+    padding: 8px;
+    width: calc(100% - 16px);
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2c2c44;
+    color: white;
 }
 
 button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  margin: 5px;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
 }
 
 .back-button {
-  background-color: #6c757d;
+    background-color: #6c757d;
 }
 
 .back-button:hover {
-  background-color: #5a6268;
+    background-color: #5a6268;
+}
+
+.card {
+    background-color: #16213e;
+    border: 1px solid #334d70;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 5px;
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
 }
 
 th, td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #334d70;
 }
 
 th {
-  background-color: #e9ecef;
+    background-color: #1a1a2e;
 }
 
 ul {
-  list-style-type: none;
-  padding: 0;
+    list-style-type: none;
+    padding: 0;
 }
 
 li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px;
-  border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #334d70;
 }
 
 li .actions button {
@@ -101,25 +102,58 @@ li .actions button {
     padding: 5px 10px;
     font-size: 12px;
 }
+
 li .actions .edit-btn {
     background: #ffc107;
 }
+
 li .actions .edit-btn:hover {
     background: #e0a800;
 }
+
 li .actions .remove-btn {
     background: #dc3545;
 }
+
 li .actions .remove-btn:hover {
     background: #c82333;
 }
 
-/* Estilo para notas editáveis */
 .editable-note {
     cursor: pointer;
-    background-color: #fffacd; /* Amarelo claro para indicar que é editável */
-    transition: background-color 0.3s;
+    background-color: #16213e;
+    color: white;
 }
+
 .editable-note:hover {
-    background-color: #f0e68c; /* Amarelo mais forte no hover */
+    background-color: #2c2c44;
+}
+
+/* Logo */
+.logo {
+    width: 80px;
+    max-width: 100px;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .logo {
+        width: 70px;
+        max-width: 80px;
+        top: 5px;
+        left: 5px;
+    }
+    .container, .admin-container, .avaliador-container {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        width: 50px;
+        max-width: 60px;
+    }
 }

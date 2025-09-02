@@ -6,9 +6,18 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Logo -->
+  <img src="logo.png" alt="Logo" class="logo">
+
   <div class="container">
     <h1>Sistema de Avaliação</h1>
-    <button onclick="verificarAdmin()">Acessar como Administrador</button>
+
+    <button onclick="abrirLoginAdmin()">Acessar como Administrador</button>
+    <div id="admin-login-box" style="display:none; margin-top:10px;">
+      <input type="password" id="senhaAdmin" placeholder="Digite a senha">
+      <button onclick="verificarAdmin()">Entrar</button>
+    </div>
+
     <button onclick="window.location.href='avaliador.html'">Acessar como Avaliador</button>
   </div>
   <script src="script.js"></script>

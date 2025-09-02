@@ -1,6 +1,14 @@
 // === Admin Login ===
-function verificarAdmin() { /* ...código inalterado... */ }
+function verificarAdmin() {
+    const senhaCorreta = "admin123"; // Defina a senha do administrador aqui
+    const senhaDigitada = document.getElementById("senhaAdmin").value;
 
+    if (senhaDigitada === senhaCorreta) {
+        window.location.href = "admin.html"; // Redireciona para a página de administrador
+    } else {
+        alert("Senha incorreta. Tente novamente.");
+    }
+}
 // === Avaliador ===
 function enviarAvaliacao() {
   const nomeAvaliador = document.getElementById("nomeAvaliador").value.trim();
