@@ -27,13 +27,14 @@ function enviarAvaliacao() {
   const linhas = document.querySelectorAll("#tabela-avaliados tr.avaliado-row");
   const avaliacoes = [];
 
-  linhas.forEach(linha => {
-    const nome = linha.querySelector("td:first-child").textContent;
-    const notaInput = linha.querySelector("input");
-    if (notaInput && notaInput.value) {
-      avaliacoes.push({ nomeAvaliado: nome, nota: parseFloat(notaInput.value) });
-    }
-  });
+ linhas.forEach(linha => {
+  const avaliadoId = linha.dataset.id; // <-- pega o UUID
+  const notaInput = linha.querySelector("input");
+  if (notaInput && notaInput.value) {
+    avaliacoes.push({ id: avaliadoId, nota: parseFloat(notaInput.value) });
+  }
+});
+
 
   if (avaliacoes.length === 0) return alert("Você precisa preencher pelo menos uma nota.");
 
@@ -115,6 +116,7 @@ function preencherAvaliador(data) {
   (data.avaliados || []).forEach(av => {
     const tr = document.createElement("tr");
     tr.className = 'avaliado-row';
+    tr.dataset.id = av.id; // <-- salva o UUID aqui
     tr.innerHTML = `<td>${av.nome}</td><td><input type="number" min="0" max="10" step="0.01"></td>`;
     tabela.appendChild(tr);
   });
@@ -148,10 +150,11 @@ function preencherTabelaEditavel(dados, tabelaId, tipoNota) {
     cellNota.textContent = Number(item.nota || 0).toFixed(2);
     cellNota.className = "editable-note";
 
-    // só entra em edição se não houver input aberto
-    cellNota.addEventListener("click", () => {
-      if (cellNota.querySelector("input")) return;
-      tornarEditavel(cellNota, item.id, tipoNota);
+    // agora só entra em edição com duplo clique
+    cellNota.addEventListener("dblclick", () => {
+      if (!cellNota.querySelector("input")) {
+        tornarEditavel(cellNota, item.id, tipoNota);
+      }
     });
   });
 }
@@ -170,9 +173,12 @@ function tornarEditavel(cell, avaliadoId, tipo) {
   input.focus();
   input.select();
 
-  input.addEventListener("blur", () =>
-    salvarNota(cell, input, avaliadoId, tipo, valorAntigo)
-  );
+  // só salva ao sair realmente do input
+  input.addEventListener("blur", (e) => {
+    if (!cell.contains(e.relatedTarget)) {
+      salvarNota(cell, input, avaliadoId, tipo, valorAntigo);
+    }
+  });
 
   input.addEventListener("keydown", (event) => {
     if (event.key === "Enter") input.blur();
@@ -296,4 +302,4 @@ function editarAvaliado(id, nomeAtual) {
     console.error("❌ Erro ao editar o nome:", err);
     alert("Erro ao editar o nome.");
   });
-}
+}enviarAvaliacao
