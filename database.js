@@ -25,10 +25,10 @@ const Avaliado = sequelize.define("Avaliado", {
 
 const NotasAvaliadores = sequelize.define("NotasAvaliadores", {
   id:        { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
-  avaliador: { type: DataTypes.STRING, allowNull: false },
-  avaliado:  { type: DataTypes.STRING, allowNull: false }, // nome textual do avaliado
-  nota:      { type: DataTypes.FLOAT,  allowNull: false },
+  avaliador: { type: DataTypes.STRING, allowNull: false },  // quem avaliou
+  nota:      { type: DataTypes.FLOAT, allowNull: false },   // nota dada
 });
+
 
 const MediaEntrevista = sequelize.define("MediaEntrevista", {
   nota: { type: DataTypes.FLOAT, defaultValue: 0 }
