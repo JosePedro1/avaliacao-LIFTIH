@@ -96,7 +96,7 @@ app.post("/avaliar", async (req, res) => {
     await NotasAvaliadores.bulkCreate(
       avaliacoes.map(a => ({
         avaliador: nomeAvaliador,
-        AvaliadoId: a.id,
+        AvaliadoId: a.id,   // ⚡ garante vínculo com Avaliado
         nota: a.nota
       })),
       { transaction: t }
@@ -209,7 +209,7 @@ app.delete("/admin/avaliados/:id", async (req, res) => {
     res.status(500).json({ message: "Erro ao remover avaliado.", detail: String(err) });
   }
 });
-
+NotasAvaliadores
 // EDITAR NOTA
 app.put("/admin/nota", async (req, res) => {
   const { avaliadoId, tipo, nota } = req.body;
