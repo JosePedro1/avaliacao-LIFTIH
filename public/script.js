@@ -135,6 +135,7 @@ function preencherTabelaSimples(dados, tabelaId, colunas) {
   });
 }
 
+// === Edição inline de notas (corrigido duplo clique) ===
 function preencherTabelaEditavel(dados, tabelaId, tipoNota) {
   const tabela = document.getElementById(tabelaId);
   if (!tabela) return;
@@ -142,24 +143,43 @@ function preencherTabelaEditavel(dados, tabelaId, tipoNota) {
   dados.forEach(item => {
     const row = tabela.insertRow();
     row.insertCell().textContent = item.nome;
+
     const cellNota = row.insertCell();
     cellNota.textContent = Number(item.nota || 0).toFixed(2);
     cellNota.className = "editable-note";
-    cellNota.onclick = () => tornarEditavel(cellNota, item.id, tipoNota);
+
+    // só entra em edição se não houver input aberto
+    cellNota.addEventListener("click", () => {
+      if (cellNota.querySelector("input")) return;
+      tornarEditavel(cellNota, item.id, tipoNota);
+    });
   });
 }
 
-// === Edição inline de notas ===
 function tornarEditavel(cell, avaliadoId, tipo) {
   const valorAntigo = cell.textContent;
-  cell.innerHTML = `<input type="number" step="0.01" value="${valorAntigo}" class="edit-input">`;
-  const input = cell.querySelector('input');
+  cell.innerHTML = "";
+
+  const input = document.createElement("input");
+  input.type = "number";
+  input.step = "0.01";
+  input.value = valorAntigo;
+  input.className = "edit-input";
+  cell.appendChild(input);
+
   input.focus();
-  input.onblur = () => salvarNota(cell, input, avaliadoId, tipo, valorAntigo);
-  input.onkeydown = (event) => {
-    if (event.key === 'Enter') input.blur();
-    if (event.key === 'Escape') cell.textContent = valorAntigo;
-  };
+  input.select();
+
+  input.addEventListener("blur", () =>
+    salvarNota(cell, input, avaliadoId, tipo, valorAntigo)
+  );
+
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") input.blur();
+    if (event.key === "Escape") {
+      cell.textContent = valorAntigo;
+    }
+  });
 }
 
 function salvarNota(cell, input, avaliadoId, tipo, valorAntigo) {
@@ -172,25 +192,27 @@ function salvarNota(cell, input, avaliadoId, tipo, valorAntigo) {
 
   cell.textContent = novoValor.toFixed(2);
 
-  fetch('/admin/nota', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ avaliadoId, tipo, nota: novoValor })
+  fetch("/admin/nota", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ avaliadoId, tipo, nota: novoValor }),
   })
-  .then(async res => {
-    const data = await res.json().catch(() => ({}));
-    console.log("📥 Resposta /admin/nota:", res.status, data);
-    if (!res.ok) throw new Error(data.message || "Falha ao salvar");
-    // Atualiza média final
-    return fetch('/dados-gerais');
-  })
-  .then(r => r.json())
-  .then(d => preencherTabelaSimples(d.mediaFinal, "tabela-media-final", ["nome", "nota"]))
-  .catch(err => {
-    console.error("❌ Erro ao salvar nota:", err);
-    alert('Erro ao salvar a nota. Revertendo.');
-    cell.textContent = valorAntigo;
-  });
+    .then(async (res) => {
+      const data = await res.json().catch(() => ({}));
+      console.log("📥 Resposta /admin/nota:", res.status, data);
+      if (!res.ok) throw new Error(data.message || "Falha ao salvar");
+      // Atualiza média final
+      return fetch("/dados-gerais");
+    })
+    .then((r) => r.json())
+    .then((d) =>
+      preencherTabelaSimples(d.mediaFinal, "tabela-media-final", ["nome", "nota"])
+    )
+    .catch((err) => {
+      console.error("❌ Erro ao salvar nota:", err);
+      alert("Erro ao salvar a nota. Revertendo.");
+      cell.textContent = valorAntigo;
+    });
 }
 
 // === CRUD Avaliados (Admin) ===

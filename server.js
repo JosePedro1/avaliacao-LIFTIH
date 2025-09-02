@@ -52,31 +52,31 @@ async function calcularMediaFinal(avaliadoId) {
   await MediaFinal.update({ nota: valor }, { where: { AvaliadoId: avaliadoId } });
 }
 
-async function calcularMediaEntrevista(nomeAvaliado) {
-  const avaliado = await Avaliado.findOne({ where: { nome: nomeAvaliado }});
+async function calcularMediaEntrevista(avaliadoId) {
+  const avaliado = await Avaliado.findByPk(avaliadoId);
   if (!avaliado) {
-    console.warn(`⚠️  calcularMediaEntrevista: Avaliado '${nomeAvaliado}' não encontrado`);
+    console.warn(`⚠️  calcularMediaEntrevista: AvaliadoId '${avaliadoId}' não encontrado`);
     return;
   }
 
-  const todasNotas = await NotasAvaliadores.findAll({ where: { avaliado: nomeAvaliado } });
+  const todasNotas = await NotasAvaliadores.findAll({ where: { AvaliadoId: avaliadoId } });
   if (todasNotas.length === 0) {
-    console.log(`ℹ️  Sem notas para '${nomeAvaliado}' ainda.`);
+    console.log(`ℹ️  Sem notas para AvaliadoId=${avaliadoId} ainda.`);
     return;
   }
 
   const soma = todasNotas.reduce((acc, item) => acc + Number(item.nota || 0), 0);
   const media = Number((soma / todasNotas.length).toFixed(2));
 
-  console.log(`ℹ️  Média entrevista '${nomeAvaliado}':`, { qtdNotas: todasNotas.length, media });
+  console.log(`ℹ️  Média entrevista AvaliadoId=${avaliadoId}:`, { qtdNotas: todasNotas.length, media });
 
-  await MediaEntrevista.update({ nota: media }, { where: { AvaliadoId: avaliado.id } });
-  await calcularMediaFinal(avaliado.id);
+  await MediaEntrevista.update({ nota: media }, { where: { AvaliadoId: avaliadoId } });
+  await calcularMediaFinal(avaliadoId);
 }
 
 // === ROTAS ===
 
-// LOGIN (placeholder se for usar mais tarde)
+// LOGIN (placeholder)
 app.post("/admin-login", async (req, res) => {
   console.log("🔐 /admin-login (não implementado — validação está no front com senha fixa)");
   res.status(200).json({ ok: true });
@@ -94,15 +94,19 @@ app.post("/avaliar", async (req, res) => {
   try {
     console.log("📝 Salvando avaliações:", { nomeAvaliador, itens: avaliacoes.length });
     await NotasAvaliadores.bulkCreate(
-      avaliacoes.map(a => ({ avaliador: nomeAvaliador, avaliado: a.nomeAvaliado, nota: a.nota })),
+      avaliacoes.map(a => ({
+        avaliador: nomeAvaliador,
+        AvaliadoId: a.id,
+        nota: a.nota
+      })),
       { transaction: t }
     );
     await t.commit();
 
-    const nomesAfetados = [...new Set(avaliacoes.map(a => a.nomeAvaliado))];
-    console.log("🔄 Recalculando médias de entrevista para:", nomesAfetados);
-    for (const nome of nomesAfetados) {
-      await calcularMediaEntrevista(nome);
+    const idsAfetados = [...new Set(avaliacoes.map(a => a.id))];
+    console.log("🔄 Recalculando médias de entrevista para:", idsAfetados);
+    for (const id of idsAfetados) {
+      await calcularMediaEntrevista(id);
     }
 
     res.status(200).json({ message: "Avaliação enviada com sucesso!" });
@@ -117,7 +121,7 @@ app.post("/avaliar", async (req, res) => {
 app.get("/dados-gerais", async (_req, res) => {
   try {
     const avaliados   = await Avaliado.findAll({ order: [['nome', 'ASC']] });
-    const avaliacoes  = await NotasAvaliadores.findAll({ order: [['avaliado', 'ASC']] });
+    const avaliacoes  = await NotasAvaliadores.findAll({ order: [['AvaliadoId', 'ASC']] });
     
     const [mediaEntrevista, cartaIntencao, mediaHistorico, mediaFinal] = await Promise.all([
       MediaEntrevista.findAll({ include: Avaliado, order: [[Avaliado, 'nome', 'ASC']] }),
@@ -186,8 +190,6 @@ app.put("/admin/avaliados/:id", async (req, res) => {
     avaliado.nome = novoNome;
     await avaliado.save();
 
-    await NotasAvaliadores.update({ avaliado: novoNome }, { where: { avaliado: nomeAntigo } });
-    
     console.log(`✏️  Renomeado: '${nomeAntigo}' → '${novoNome}' (id=${id})`);
     res.json({ message: "Nome atualizado com sucesso." });
   } catch (err) {
