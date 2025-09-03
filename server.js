@@ -121,7 +121,12 @@ app.post("/avaliar", async (req, res) => {
 app.get("/dados-gerais", async (_req, res) => {
   try {
     const avaliados   = await Avaliado.findAll({ order: [['nome', 'ASC']] });
-    const avaliacoes  = await NotasAvaliadores.findAll({ order: [['AvaliadoId', 'ASC']] });
+
+    // Agora inclui Avaliado para trazer nome e id junto
+    const avaliacoes  = await NotasAvaliadores.findAll({
+      include: [{ model: Avaliado, attributes: ["id", "nome"] }],
+      order: [["AvaliadoId", "ASC"]],
+    });
     
     const [mediaEntrevista, cartaIntencao, mediaHistorico, mediaFinal] = await Promise.all([
       MediaEntrevista.findAll({ include: Avaliado, order: [[Avaliado, 'nome', 'ASC']] }),
@@ -141,7 +146,15 @@ app.get("/dados-gerais", async (_req, res) => {
 
     res.status(200).json({
       avaliados,
-      avaliacoes,
+      avaliacoes: avaliacoes.map(n => ({
+        id: n.id,
+        avaliador: n.avaliador,
+        nota: Number(n.nota || 0),
+        avaliado: {
+          id: n.Avaliado?.id,
+          nome: n.Avaliado?.nome || "(sem nome)"
+        }
+      })),
       mediaEntrevista: formatData(mediaEntrevista),
       cartaIntencao:   formatData(cartaIntencao),
       mediaHistorico:  formatData(mediaHistorico),
@@ -209,7 +222,7 @@ app.delete("/admin/avaliados/:id", async (req, res) => {
     res.status(500).json({ message: "Erro ao remover avaliado.", detail: String(err) });
   }
 });
-NotasAvaliadores
+
 // EDITAR NOTA
 app.put("/admin/nota", async (req, res) => {
   const { avaliadoId, tipo, nota } = req.body;
