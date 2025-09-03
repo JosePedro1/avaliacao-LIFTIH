@@ -149,7 +149,7 @@ app.get("/dados-gerais", async (_req, res) => {
         avaliador: n.avaliador,
         nota: Number(n.nota || 0),
         avaliadoId: n.Avaliado?.id,
-        avaliadoNome: n.Avaliado?.nome || "(sem nome)"
+        avaliado: n.Avaliado?.nome || "(sem nome)"
       })),
       mediaEntrevista: formatData(mediaEntrevista),
       cartaIntencao:   formatData(cartaIntencao),

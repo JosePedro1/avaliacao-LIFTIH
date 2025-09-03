@@ -27,14 +27,13 @@ function enviarAvaliacao() {
   const linhas = document.querySelectorAll("#tabela-avaliados tr.avaliado-row");
   const avaliacoes = [];
 
- linhas.forEach(linha => {
-  const avaliadoId = linha.dataset.id; // <-- pega o UUID
-  const notaInput = linha.querySelector("input");
-  if (notaInput && notaInput.value) {
-    avaliacoes.push({ id: avaliadoId, nota: parseFloat(notaInput.value) });
-  }
-});
-
+  linhas.forEach(linha => {
+    const avaliadoId = linha.dataset.id; // <-- pega o UUID
+    const notaInput = linha.querySelector("input");
+    if (notaInput && notaInput.value) {
+      avaliacoes.push({ id: avaliadoId, nota: parseFloat(notaInput.value) });
+    }
+  });
 
   if (avaliacoes.length === 0) return alert("Você precisa preencher pelo menos uma nota.");
 
@@ -50,11 +49,15 @@ function enviarAvaliacao() {
       console.log("📥 Resposta /avaliar:", res.status, data);
       if (!res.ok) throw new Error(data.message || "Falha ao enviar");
       alert(data.message || "Avaliação enviada!");
+      
       // limpa inputs
       linhas.forEach(linha => {
         const notaInput = linha.querySelector("input");
         if (notaInput) notaInput.value = "";
       });
+
+      // ✅ redireciona para a tela inicial
+      window.location.href = "index.html";
     })
     .catch(err => {
       console.error("❌ Erro ao enviar avaliação:", err);
