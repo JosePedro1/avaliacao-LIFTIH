@@ -96,7 +96,7 @@ app.post("/avaliar", async (req, res) => {
     await NotasAvaliadores.bulkCreate(
       avaliacoes.map(a => ({
         avaliador: nomeAvaliador,
-        AvaliadoId: a.id,   // ⚡ garante vínculo com Avaliado
+        AvaliadoId: a.id,
         nota: a.nota
       })),
       { transaction: t }
@@ -121,11 +121,9 @@ app.post("/avaliar", async (req, res) => {
 app.get("/dados-gerais", async (_req, res) => {
   try {
     const avaliados   = await Avaliado.findAll({ order: [['nome', 'ASC']] });
-
-    // Agora inclui Avaliado para trazer nome e id junto
     const avaliacoes  = await NotasAvaliadores.findAll({
-      include: [{ model: Avaliado, attributes: ["id", "nome"] }],
-      order: [["AvaliadoId", "ASC"]],
+      include: Avaliado,
+      order: [['AvaliadoId', 'ASC']]
     });
     
     const [mediaEntrevista, cartaIntencao, mediaHistorico, mediaFinal] = await Promise.all([
@@ -150,10 +148,8 @@ app.get("/dados-gerais", async (_req, res) => {
         id: n.id,
         avaliador: n.avaliador,
         nota: Number(n.nota || 0),
-        avaliado: {
-          id: n.Avaliado?.id,
-          nome: n.Avaliado?.nome || "(sem nome)"
-        }
+        avaliadoId: n.Avaliado?.id,
+        avaliadoNome: n.Avaliado?.nome || "(sem nome)"
       })),
       mediaEntrevista: formatData(mediaEntrevista),
       cartaIntencao:   formatData(cartaIntencao),
